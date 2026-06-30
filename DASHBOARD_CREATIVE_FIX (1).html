@@ -159,6 +159,7 @@ pre#scriptCode{background:var(--code-bg);border:1px solid var(--line);border-rad
     <div class="page-tab" data-page="1">Ringkasan</div>
     <div class="page-tab" data-page="2">Produksi &amp; Performa Konten</div>
     <div class="page-tab" data-page="3">Kesehatan Akun Sosmed</div>
+    <div class="page-tab" data-page="5">Request Konten</div>
     <div class="page-tab" data-page="4">Integrasi Spreadsheet</div>
   </div>
 
@@ -200,6 +201,12 @@ pre#scriptCode{background:var(--code-bg);border:1px solid var(--line);border-rad
         <div class="panel-desc">Jumlah konten berdasarkan kreator/editor</div>
         <div class="chart-wrap"><canvas id="chartKontribusi"></canvas></div>
       </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="panel-title">Kontribusi Penjualan Organik</div>
+      <div class="panel-desc">Omzet penjualan organik berdasarkan akun (akumulasi semua data, tidak terikat filter periode)</div>
+      <div class="chart-wrap"><canvas id="chartSalesKontribusi"></canvas></div>
     </div>
 
     <div class="section-header"><h2>Leaderboard Performa</h2><div class="muted-note">Top 5 konten berdasarkan views pada periode & filter terpilih</div></div>
@@ -294,6 +301,41 @@ pre#scriptCode{background:var(--code-bg);border:1px solid var(--line);border-rad
     </div>
   </div>
 
+  <!-- ===================== PAGE 5: REQUEST KONTEN ===================== -->
+  <div class="page-view" data-page="5">
+    <div class="section-header"><h2>Ajukan Request Konten</h2><div class="muted-note">Isi brief permintaan konten — tersimpan otomatis &amp; terkirim ke spreadsheet (jika sudah terhubung)</div></div>
+    <div class="card">
+      <div class="input-panel">
+        <div class="field" style="grid-column:span 2;"><label>Judul Konten</label><input type="text" id="inReqJudul" placeholder="Judul / topik konten yang diminta"></div>
+        <div class="field"><label>Diminta Oleh</label><input type="text" id="inReqRequester" placeholder="Nama pemohon"></div>
+        <div class="field"><label>PIC / Ditugaskan ke</label><select id="inReqPIC"></select></div>
+        <div class="field"><label>Produk</label><select id="inReqProduk"></select></div>
+        <div class="field"><label>Platform Tujuan</label><select id="inReqPlatform"></select></div>
+        <div class="field"><label>Deadline</label><input type="date" id="inReqDeadline"></div>
+        <div class="field"><label>Prioritas</label><select id="inReqPrioritas"></select></div>
+        <div class="field"><label>Status</label><select id="inReqStatus"></select></div>
+        <div class="field" style="grid-column:span 2;"><label>Brief / Deskripsi</label><textarea id="inReqBrief" rows="4" placeholder="Jelaskan detail konten yang diminta: tujuan, referensi, key message, dsb." style="width:100%;resize:vertical;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:10px;color:var(--text);font-family:inherit;"></textarea></div>
+      </div>
+      <button class="btn primary" id="btnSaveRequest">📩 Kirim Request</button>
+      <div class="muted-note" id="requestSaveMsg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="section-header"><h2>Daftar Request Konten</h2><div class="muted-note">Klik status untuk memperbarui progres</div></div>
+    <div class="card">
+      <div class="filterbar" style="margin-bottom:12px;">
+        <select id="filterReqStatus"><option value="">Semua Status</option></select>
+        <select id="filterReqPIC"><option value="">Semua PIC</option></select>
+        <input type="text" id="filterReqJudul" placeholder="Cari judul...">
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Tanggal Request</th><th>Judul</th><th>Diminta Oleh</th><th>PIC</th><th>Produk</th><th>Platform</th><th>Deadline</th><th>Prioritas</th><th>Status</th><th>Brief</th><th>Aksi</th></tr></thead>
+          <tbody id="tblRequests"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <!-- ===================== PAGE 4: INTEGRASI SPREADSHEET ===================== -->
   <div class="page-view" data-page="4">
     <div class="section-header"><h2>Integrasi Spreadsheet (Google Apps Script)</h2><div class="muted-note">Tarik &amp; kirim data otomatis ke Google Sheets</div></div>
@@ -308,7 +350,7 @@ pre#scriptCode{background:var(--code-bg);border:1px solid var(--line);border-rad
         <button class="btn" id="btnTestConn" style="background:var(--purple,#7c3aed);color:#fff;">🔍 Test Koneksi</button>
       </div>
       <div class="muted-note" id="sheetSyncMsg" style="margin-bottom:10px;color:var(--cyan);">Belum disinkronkan.</div>
-      <div class="muted-note" style="margin-bottom:8px;">Buka Google Sheet Anda → <b>Extensions → Apps Script</b> → tempel kode di bawah → <b>Deploy → New deployment → Web app</b> (Execute as: Me, Who has access: Anyone) → salin URL hasil deploy ke kolom di atas. Buat 2 sheet bernama <code class="inline">Produksi</code> (kolom: tanggal, judul, nama, tipe, platform, views, likes, comments, shares) dan <code class="inline">Akun</code> (kolom: tanggal, nama, platform, status, followers, note).</div>
+      <div class="muted-note" style="margin-bottom:8px;">Buka Google Sheet Anda → <b>Extensions → Apps Script</b> → tempel kode di bawah → <b>Deploy → New deployment → Web app</b> (Execute as: Me, Who has access: Anyone) → salin URL hasil deploy ke kolom di atas. Buat 2 sheet bernama <code class="inline">Produksi</code> (kolom: tanggal, judul, nama, tipe, platform, views, likes, comments, shares) dan <code class="inline">Akun</code> (kolom: tanggal, nama, platform, status, followers, note, salesUnit, salesOmzet). Sheet <code class="inline">RequestKonten</code> (kolom: tanggal, judul, requester, pic, produk, platform, deadline, prioritas, status, brief) akan dibuat otomatis saat request konten pertama dikirim.</div>
       <button class="btn" id="btnShowScript">Lihat / Salin Kode Apps Script</button>
       <button class="btn" id="btnCopyScript">Copy Kode</button>
       <div id="scriptBox" style="display:none;margin-top:12px;"><pre id="scriptCode"></pre></div>
@@ -332,22 +374,16 @@ let PRODUCTS = ['Produk A','Produk B','Produk C'];
 
 let VIDEOS = []; // {tanggal, judul, nama, tipe, platform, views, likes, comments, shares}
 let AKUN_LOG = []; // {tanggal, nama, platform, status, followers, note}
-let DELETED_ACCOUNTS = []; // nama akun yang sudah eksplisit dihapus user, agar tidak muncul lagi dari pull
-let DELETED_TEAM = []; // nama kreator yang sudah eksplisit dihapus user, agar tidak muncul lagi dari pull
+let REQUESTS = []; // {tanggal, judul, requester, pic, produk, platform, deadline, prioritas, status, brief}
+const PRIORITAS_OPTS = ['Rendah','Normal','Tinggi','Urgent'];
+const REQ_STATUS_OPTS = ['Baru','Diproses','Revisi','Selesai','Ditolak'];
 
 let charts = {};
 let currentPeriod = 'month';
 let customStart = null, customEnd = null;
 
 /* ============== UTIL ============== */
-function fmtISO(d){
-  // Pakai komponen tanggal LOKAL (bukan toISOString yang konversi ke UTC),
-  // agar tidak mundur 1 hari untuk pengguna di zona waktu timur UTC (misal WIB/UTC+7)
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  const day = String(d.getDate()).padStart(2,'0');
-  return `${y}-${m}-${day}`;
-}
+function fmtISO(d){ return d.toISOString().slice(0,10); }
 function fmtDateID(d){ return d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}); }
 function parseDate(v){ if(!v) return null; const d = new Date(v); return isNaN(d.getTime())?null:d; }
 function numFmt(n){ return new Intl.NumberFormat('id-ID').format(Math.round(n||0)); }
@@ -368,7 +404,7 @@ function inRange(dateObj, range){ const d = startOfDay(dateObj); return d>=range
 /* ============== LOCAL STORAGE ============== */
 function saveLocalState(){
   try{
-    localStorage.setItem('creativeOpsState', JSON.stringify({TEAM, ACCOUNTS, VIDEOS, AKUN_LOG, PRODUCTS, DELETED_ACCOUNTS, DELETED_TEAM}));
+    localStorage.setItem('creativeOpsState', JSON.stringify({TEAM, ACCOUNTS, VIDEOS, AKUN_LOG, PRODUCTS, REQUESTS}));
     localStorage.setItem('creativeOpsScriptUrl', document.getElementById('appsScriptUrl').value.trim());
   }catch(e){}
 }
@@ -377,7 +413,7 @@ function loadLocalState(){
     const raw = localStorage.getItem('creativeOpsState');
     if(raw){
       const s = JSON.parse(raw);
-      TEAM = s.TEAM||TEAM; ACCOUNTS = s.ACCOUNTS||ACCOUNTS; VIDEOS = s.VIDEOS||[]; AKUN_LOG = s.AKUN_LOG||[]; PRODUCTS = s.PRODUCTS||PRODUCTS; DELETED_ACCOUNTS = s.DELETED_ACCOUNTS||[]; DELETED_TEAM = s.DELETED_TEAM||[];
+      TEAM = s.TEAM||TEAM; ACCOUNTS = s.ACCOUNTS||ACCOUNTS; VIDEOS = s.VIDEOS||[]; AKUN_LOG = s.AKUN_LOG||[]; PRODUCTS = s.PRODUCTS||PRODUCTS; REQUESTS = s.REQUESTS||[];
     }
     const url = localStorage.getItem('creativeOpsScriptUrl');
     if(url) document.getElementById('appsScriptUrl').value = url;
@@ -421,6 +457,13 @@ function refreshSelectors(){
   fillSelect(document.getElementById('filterTipe'), TIPE_KONTEN, true);
   fillSelect(document.getElementById('filterPlatform'), PLATFORMS, true);
   fillSelect(document.getElementById('filterProduk'), PRODUCTS, true);
+  fillSelect(document.getElementById('inReqPIC'), TEAM, false);
+  fillSelect(document.getElementById('inReqProduk'), PRODUCTS, false);
+  fillSelect(document.getElementById('inReqPlatform'), PLATFORMS, false);
+  fillSelect(document.getElementById('inReqPrioritas'), PRIORITAS_OPTS, false);
+  fillSelect(document.getElementById('inReqStatus'), REQ_STATUS_OPTS, false);
+  fillSelect(document.getElementById('filterReqStatus'), REQ_STATUS_OPTS, true);
+  fillSelect(document.getElementById('filterReqPIC'), TEAM, true);
 }
 
 /* ============== TEAM & ACCOUNT MANAGEMENT ============== */
@@ -431,17 +474,13 @@ function renderTeamList(){
     const pill = document.createElement('div');
     pill.className = 'acc-item'; pill.style.display='flex'; pill.style.gap='8px'; pill.style.alignItems='center';
     pill.innerHTML = `<span>${nm}</span><button class="icon-btn" style="background:none;border:none;color:var(--muted);cursor:pointer;">✕</button>`;
-    pill.querySelector('button').onclick = ()=>{ 
-      if(!DELETED_TEAM.includes(nm)) DELETED_TEAM.push(nm);
-      TEAM = TEAM.filter(t=>t!==nm); saveLocalState(); renderTeamList(); refreshSelectors(); pushOneToSheet({sheetType:'kreator_list', list: TEAM}); };
+    pill.querySelector('button').onclick = ()=>{ TEAM = TEAM.filter(t=>t!==nm); saveLocalState(); renderTeamList(); refreshSelectors(); pushOneToSheet({sheetType:'kreator_list', list: TEAM}); };
     wrap.appendChild(pill);
   });
 }
 document.getElementById('btnAddTeam').onclick = ()=>{
   const v = document.getElementById('newTeamName').value.trim();
   if(!v) return;
-  // Kalau kreator ini pernah dihapus, hapus dari daftar "deleted" supaya bisa ditambah lagi
-  DELETED_TEAM = DELETED_TEAM.filter(n=>n!==v);
   if(!TEAM.includes(v)) TEAM.push(v);
   document.getElementById('newTeamName').value='';
   saveLocalState(); renderTeamList(); refreshSelectors(); refreshSummaryFilters();
@@ -475,22 +514,7 @@ function renderAccList(){
     const pill = document.createElement('div');
     pill.className = 'acc-item'; pill.style.display='flex'; pill.style.gap='8px'; pill.style.alignItems='center';
     pill.innerHTML = `<span>${acc.nama} <span class="muted-note">(${acc.platform})</span></span><button class="icon-btn" style="background:none;border:none;color:var(--muted);cursor:pointer;">✕</button>`;
-    pill.querySelector('button').onclick = ()=>{
-      if(!confirm(`Hapus akun "${acc.nama}" beserta seluruh riwayat update-nya di spreadsheet? Aksi ini tidak bisa dibatalkan.`)) return;
-      ACCOUNTS = ACCOUNTS.filter(a=>a.nama!==acc.nama);
-      AKUN_LOG = AKUN_LOG.filter(r=>r.nama!==acc.nama); // hapus juga riwayat lokal
-      // Tandai akun ini sebagai "sudah dihapus user" agar tidak muncul lagi dari auto-sync
-      if(!DELETED_ACCOUNTS.includes(acc.nama)) DELETED_ACCOUNTS.push(acc.nama);
-      saveLocalState(); renderAccList(); refreshSelectors(); refreshPerfAkunSelect(); render();
-      // Kirim BERURUTAN (bukan paralel) supaya tidak race dengan pullFromSheet:
-      // 1) update Akun_List dulu di server, 2) baru hapus riwayat di sheet Akun
-      pushOneToSheet({sheetType:'akun_list', list: ACCOUNTS}).then(()=>{
-        return pushOneToSheet({sheetType:'akun_delete', nama: acc.nama});
-      }).then(st=>{
-        // Tunggu sebentar sebelum tarik ulang, beri waktu server selesai memproses kedua perintah
-        setTimeout(()=>{ pullFromSheet(true); }, 1500);
-      });
-    };
+    pill.querySelector('button').onclick = ()=>{ ACCOUNTS = ACCOUNTS.filter(a=>a.nama!==acc.nama); saveLocalState(); renderAccList(); refreshSelectors(); refreshPerfAkunSelect(); render(); pushOneToSheet({sheetType:'akun_list', list: ACCOUNTS}); };
     wrap.appendChild(pill);
   });
 }
@@ -498,8 +522,6 @@ document.getElementById('btnAddAcc').onclick = ()=>{
   const v = document.getElementById('newAccName').value.trim();
   const p = document.getElementById('newAccPlatform').value;
   if(!v) return;
-  // Kalau akun ini pernah dihapus, hapus dari daftar "deleted" supaya bisa ditambah lagi
-  DELETED_ACCOUNTS = DELETED_ACCOUNTS.filter(n=>n!==v);
   if(!ACCOUNTS.find(a=>a.nama===v)) ACCOUNTS.push({nama:v, platform:p});
   document.getElementById('newAccName').value='';
   saveLocalState(); renderAccList(); refreshSelectors(); refreshPerfAkunSelect(); render();
@@ -525,6 +547,114 @@ document.getElementById('btnSaveVideo').onclick = async ()=>{
   else if(status==='no-url'){ msg.textContent='Tersimpan di dashboard. Belum terhubung ke spreadsheet (isi URL Apps Script di tab Integrasi).'; msg.style.color='var(--yellow)'; }
   else { msg.textContent='Tersimpan di dashboard, tapi gagal mengirim ke spreadsheet.'; msg.style.color='var(--red)'; }
   document.getElementById('inVidJudul').value='';
+};
+
+/* ============== REQUEST KONTEN ============== */
+function convertRequestToVideo(idx){
+  const r = REQUESTS[idx];
+  if(!r || r.convertedToVideo) return false;
+  const rec = {
+    tanggal: fmtISO(new Date()),
+    judul: r.judul,
+    nama: r.pic || (TEAM[0]||''),
+    tipe: TIPE_KONTEN[0],
+    produk: r.produk || '',
+    platform: r.platform || (PLATFORMS[0]||''),
+    views:0, likes:0, comments:0, shares:0, lastUpdated:''
+  };
+  VIDEOS.push(rec);
+  pushOneToSheet({sheetType:'video', ...rec});
+  r.convertedToVideo = true;
+  return true;
+}
+function renderRequests(){
+  const tbody = document.getElementById('tblRequests');
+  if(!tbody) return;
+  const fStatus = document.getElementById('filterReqStatus').value;
+  const fPIC = document.getElementById('filterReqPIC').value;
+  const fJudul = document.getElementById('filterReqJudul').value.trim().toLowerCase();
+  let rows = REQUESTS.map((r,i)=>({...r, _idx:i}));
+  if(fStatus) rows = rows.filter(r=>r.status===fStatus);
+  if(fPIC) rows = rows.filter(r=>r.pic===fPIC);
+  if(fJudul) rows = rows.filter(r=>(r.judul||'').toLowerCase().includes(fJudul));
+  rows.sort((a,b)=> new Date(b.tanggal)-new Date(a.tanggal));
+  const statusColor = {Baru:'var(--blue)', Diproses:'var(--yellow)', Revisi:'var(--red)', Selesai:'var(--pink)', Ditolak:'var(--muted)'};
+  tbody.innerHTML = rows.map(r=>`
+    <tr>
+      <td>${escapeHtml(r.tanggal||'')}</td>
+      <td>${escapeHtml(r.judul||'')}</td>
+      <td>${escapeHtml(r.requester||'')}</td>
+      <td>${escapeHtml(r.pic||'')}</td>
+      <td>${escapeHtml(r.produk||'')}</td>
+      <td>${escapeHtml(r.platform||'')}</td>
+      <td>${escapeHtml(r.deadline||'-')}</td>
+      <td>${escapeHtml(r.prioritas||'')}</td>
+      <td>
+        <select data-idx="${r._idx}" class="reqStatusSelect" style="color:${statusColor[r.status]||'var(--text)'};font-weight:600;">
+          ${REQ_STATUS_OPTS.map(s=>`<option value="${s}" ${s===r.status?'selected':''}>${s}</option>`).join('')}
+        </select>
+        ${r.convertedToVideo?'<div style="font-size:10px;color:var(--pink);margin-top:3px;">✓ masuk Daftar Konten</div>':''}
+      </td>
+      <td style="max-width:220px;white-space:normal;">${escapeHtml(r.brief||'')}</td>
+      <td><button class="btn" data-idx="${r._idx}" data-act="delReq" style="font-size:11px;padding:4px 8px;">Hapus</button></td>
+    </tr>
+  `).join('');
+  tbody.querySelectorAll('.reqStatusSelect').forEach(sel=>{
+    sel.addEventListener('change', async function(){
+      const idx = parseInt(this.dataset.idx);
+      const prevStatus = REQUESTS[idx].status;
+      REQUESTS[idx].status = this.value;
+      let converted = false;
+      if(this.value === 'Selesai' && prevStatus !== 'Selesai' && !REQUESTS[idx].convertedToVideo){
+        converted = convertRequestToVideo(idx);
+      }
+      saveLocalState(); renderRequests();
+      await pushOneToSheet({sheetType:'request_update', ...REQUESTS[idx]});
+      if(converted){
+        render(); refreshPerfSelect();
+        const msg = document.getElementById('requestSaveMsg');
+        if(msg){ msg.textContent = '✅ "'+REQUESTS[idx].judul+'" otomatis ditambahkan ke Daftar Konten.'; msg.style.color = 'var(--cyan)'; }
+      }
+    });
+  });
+  tbody.querySelectorAll('[data-act="delReq"]').forEach(btn=>{
+    btn.addEventListener('click', function(){
+      const idx = parseInt(this.dataset.idx);
+      if(!confirm('Hapus request ini?')) return;
+      REQUESTS.splice(idx,1);
+      saveLocalState(); renderRequests();
+    });
+  });
+}
+['filterReqStatus','filterReqPIC','filterReqJudul'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('input', renderRequests);
+});
+
+document.getElementById('btnSaveRequest').onclick = async ()=>{
+  const judul = document.getElementById('inReqJudul').value.trim();
+  const requester = document.getElementById('inReqRequester').value.trim();
+  const pic = document.getElementById('inReqPIC').value;
+  const produk = document.getElementById('inReqProduk').value;
+  const platform = document.getElementById('inReqPlatform').value;
+  const deadline = document.getElementById('inReqDeadline').value;
+  const prioritas = document.getElementById('inReqPrioritas').value;
+  const status = document.getElementById('inReqStatus').value || 'Baru';
+  const brief = document.getElementById('inReqBrief').value.trim();
+  const msg = document.getElementById('requestSaveMsg');
+  if(!judul){ msg.textContent='Isi judul konten terlebih dahulu.'; msg.style.color='var(--red)'; return; }
+  const rec = {tanggal: fmtISO(new Date()), judul, requester, pic, produk, platform, deadline, prioritas, status, brief};
+  REQUESTS.push(rec);
+  saveLocalState(); renderRequests();
+  msg.textContent = 'Tersimpan: '+judul+' — mengirim ke spreadsheet...'; msg.style.color='var(--muted)';
+  const res = await pushOneToSheet({sheetType:'request', ...rec});
+  if(res==='ok'){ msg.textContent='✅ Request terkirim & tersimpan: '+judul; msg.style.color='var(--cyan)'; }
+  else if(res==='no-url'){ msg.textContent='Tersimpan di dashboard. Belum terhubung ke spreadsheet (isi URL Apps Script di tab Integrasi).'; msg.style.color='var(--yellow)'; }
+  else { msg.textContent='Tersimpan di dashboard, tapi gagal mengirim ke spreadsheet.'; msg.style.color='var(--red)'; }
+  document.getElementById('inReqJudul').value='';
+  document.getElementById('inReqRequester').value='';
+  document.getElementById('inReqDeadline').value='';
+  document.getElementById('inReqBrief').value='';
 };
 
 /* ============== UPDATE PERFORMA ============== */
@@ -599,55 +729,21 @@ function updateAkunInline(nama){
   const followers = parseFloat(document.getElementById('akun_followers_'+safeId).value)||0;
   const status    = document.getElementById('akun_status_'+safeId).value;
   const note      = document.getElementById('akun_note_'+safeId).value.trim();
-  const tanggal   = fmtISO(new Date());
+  const salesUnit  = parseFloat(document.getElementById('akun_salesunit_'+safeId).value)||0;
+  const salesOmzet = parseFloat(document.getElementById('akun_salesomzet_'+safeId).value)||0;
+  const tanggal   = new Date().toISOString(); // datetime penuh agar entry terbaru selalu terdeteksi
   const acc       = ACCOUNTS.find(a=>a.nama===nama);
   const platform  = acc ? acc.platform : '';
   const msg       = document.getElementById('akun_msg_'+safeId);
 
   // Mode APPEND — setiap update selalu tambah entry baru (untuk history)
-  const rec = {tanggal, nama, platform, status, followers, note};
+  const rec = {tanggal, nama, platform, status, followers, note, salesUnit, salesOmzet};
   AKUN_LOG.push(rec);
 
   saveLocalState(); render();
   msg.textContent = '✅ Diperbarui'; msg.style.color='var(--cyan)';
-
-  // State tombol: loading (di-set SETELAH render() karena render() membangun ulang DOM kartu)
-  const btn = document.getElementById('akun_btn_'+safeId);
-  if(btn){
-    btn.disabled = true;
-    btn.dataset.originalHtml = btn.dataset.originalHtml || btn.innerHTML;
-    btn.innerHTML = '⏳ Menyimpan...';
-    btn.style.opacity = '0.75';
-    btn.style.cursor = 'wait';
-  }
-
   pushOneToSheet({sheetType:'akun_update', ...rec}).then(st=>{
-    const btn2 = document.getElementById('akun_btn_'+safeId); // re-grab, DOM mungkin sudah di-render ulang oleh pullFromSheet
-    if(st==='ok'){
-      msg.textContent = '✅ Diperbarui & terkirim ke spreadsheet.';
-      if(btn2){
-        btn2.innerHTML = '✅ Tersimpan';
-        btn2.style.background = 'var(--cyan)';
-      }
-      pullFromSheet(true);
-    } else {
-      msg.textContent = '⚠️ Gagal terkirim ke spreadsheet, coba lagi.'; msg.style.color='var(--red)';
-      if(btn2){
-        btn2.innerHTML = '⚠️ Gagal, klik lagi';
-        btn2.style.background = 'var(--red)';
-      }
-    }
-    // Kembalikan tombol ke kondisi normal setelah 1.8 detik
-    setTimeout(()=>{
-      const btn3 = document.getElementById('akun_btn_'+safeId);
-      if(btn3){
-        btn3.disabled = false;
-        btn3.innerHTML = btn3.dataset.originalHtml || '💾 Update';
-        btn3.style.opacity = '';
-        btn3.style.cursor = '';
-        btn3.style.background = '';
-      }
-    }, 1800);
+    if(st==='ok'){ msg.textContent = '✅ Diperbarui & terkirim ke spreadsheet.'; pullFromSheet(true); }
   });
 }
 
@@ -665,20 +761,36 @@ function followerGrowthPct(nama){
   const target = new Date(now);
   target.setDate(target.getDate()-30);
 
-  // find entry closest to 30 days ago — HARUS berjarak minimal 3 hari dari latest
-  // supaya tidak membandingkan data yang diinput di hari yang sama / berdekatan
-  const MIN_GAP_MS = 3 * 24 * 60 * 60 * 1000; // 3 hari
+  // find entry closest to 30 days ago (but not the same day as latest)
   let prev = null, bestDiff = Infinity;
   entries.forEach((e,i)=>{
     if(i===0) return;
-    const gap = now - e._d;
-    if(gap < MIN_GAP_MS) return; // skip jika terlalu dekat (hari sama atau 1-2 hari)
     const diff = Math.abs(e._d - target);
     if(diff < bestDiff){ bestDiff = diff; prev = e; }
   });
   if(!prev || prev.followers == null || prev.followers === 0) return null;
   const pct = ((latest.followers - prev.followers) / prev.followers) * 100;
   return {pct: pct.toFixed(1), prevFollowers: prev.followers, prevDate: prev.tanggal};
+}
+
+// Views & Engagement Rate untuk konten yang diposting lewat akun tertentu,
+// dibandingkan 30 hari terakhir vs 30 hari sebelumnya
+function accountContentStats(nama){
+  const vids = VIDEOS.filter(v=>v.akunPosting===nama && v.tanggal)
+    .map(v=>({...v, _d:new Date(v.tanggal)}))
+    .filter(v=>!isNaN(v._d));
+  if(!vids.length) return null;
+  const latestDate = vids.reduce((m,v)=> v._d>m?v._d:m, vids[0]._d);
+  const cutoff30 = new Date(latestDate); cutoff30.setDate(cutoff30.getDate()-30);
+  const cutoff60 = new Date(latestDate); cutoff60.setDate(cutoff60.getDate()-60);
+  const curPeriod  = vids.filter(v=> v._d > cutoff30 && v._d <= latestDate);
+  const prevPeriod = vids.filter(v=> v._d > cutoff60 && v._d <= cutoff30);
+  const sumViews = arr=> arr.reduce((s,v)=>s+(v.views||0),0);
+  const avgER = arr=>{ if(!arr.length) return 0; return arr.reduce((s,v)=>s+engagementRate(v),0)/arr.length; };
+  const curViews = sumViews(curPeriod), prevViews = sumViews(prevPeriod);
+  let viewsPct = null;
+  if(prevViews>0) viewsPct = (((curViews-prevViews)/prevViews)*100).toFixed(1);
+  return { curViews, prevViews, viewsPct, curER: avgER(curPeriod), contentCount: curPeriod.length };
 }
 
 /* ============== RENDER: PAGE 1 RINGKASAN ============== */
@@ -697,9 +809,7 @@ function latestStatusPerAccount(){
   const map = {};
   AKUN_LOG.forEach(r=>{
     const d = parseDate(r.tanggal); if(!d) return;
-    // Pakai >= (bukan >) supaya update terbaru pada tanggal yang SAMA tetap menggantikan
-    // update sebelumnya di hari itu (AKUN_LOG selalu berurutan kronologis: yang lebih baru ditambahkan di akhir)
-    if(!map[r.nama] || d >= parseDate(map[r.nama].tanggal)) map[r.nama] = r;
+    if(!map[r.nama] || d > parseDate(map[r.nama].tanggal)) map[r.nama] = r;
   });
   return map;
 }
@@ -916,6 +1026,46 @@ function renderSummary(range){
     }
   });
 
+  // ── CHART: Kontribusi Penjualan Organik (Omzet) per Akun ──
+  const omzetPerAkun = {};
+  AKUN_LOG.forEach(r=>{ omzetPerAkun[r.nama] = (omzetPerAkun[r.nama]||0) + (r.salesOmzet||0); });
+  const akunNamesSales = Object.keys(omzetPerAkun).filter(n=>omzetPerAkun[n]>0);
+  const salesCanvas = document.getElementById('chartSalesKontribusi');
+  destroyChart('chartSalesKontribusi');
+  if(salesCanvas){
+    if(akunNamesSales.length === 0){
+      const ctx2d = salesCanvas.getContext('2d');
+      ctx2d.clearRect(0,0,salesCanvas.width,salesCanvas.height);
+    } else {
+      charts.chartSalesKontribusi = new Chart(salesCanvas, {
+        type:'doughnut',
+        data:{
+          labels: akunNamesSales,
+          datasets:[{
+            data: akunNamesSales.map(n=>omzetPerAkun[n]),
+            backgroundColor: palette,
+            borderColor: 'var(--panel)',
+            borderWidth: 3,
+            hoverOffset: 8,
+          }]
+        },
+        options:{
+          cutout:'60%',
+          plugins:{
+            legend:{ position:'bottom', labels:{ color: getMuted(), padding:16, font:{size:12}, usePointStyle:true, pointStyleWidth:10 } },
+            tooltip:{ callbacks:{
+              label: ctx=>{
+                const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+                const pct = total>0 ? ((ctx.parsed/total)*100).toFixed(1) : 0;
+                return ` ${ctx.label}: Rp ${numFmt(ctx.parsed)} (${pct}%)`;
+              }
+            }}
+          }
+        }
+      });
+    }
+  }
+
   // ── LEADERBOARD ──
   const top5 = [...vids].sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,5);
   document.getElementById('tblLeaderboard').innerHTML = top5.map(v=>`
@@ -1068,27 +1218,13 @@ function renderHealth(){
     wrap.innerHTML = '<div class="muted-note" style="padding:16px;">Belum ada akun terdaftar. Tambah akun di bawah.</div>';
     return;
   }
-  // Jangan render ulang kalau user sedang fokus/mengetik di salah satu input kartu akun
-  // (mencegah input hilang akibat auto-sync setiap 10 detik)
-  const active = document.activeElement;
-  if(active && wrap.contains(active) && (active.tagName === 'INPUT' || active.tagName === 'SELECT' || active.tagName === 'TEXTAREA')){
-    return;
-  }
-  // Simpan dulu nilai yang BELUM disimpan (dirty) di kartu lain agar tidak hilang saat render ulang
-  // (misalnya saat klik Update di satu kartu, lalu seluruh healthCards di-render ulang)
-  const dirty = {};
-  wrap.querySelectorAll('input,select').forEach(el=>{
-    const orig = el.dataset.orig;
-    if(orig !== undefined && el.value !== orig){
-      const m = el.id.match(/^akun_(followers|status|note)_(.+)$/);
-      if(m){ const field=m[1], safeIdKey=m[2]; dirty[safeIdKey] = dirty[safeIdKey] || {}; dirty[safeIdKey][field] = el.value; }
-    }
-  });
   wrap.innerHTML = ACCOUNTS.map(acc=>{
     const r = statusMap[acc.nama] || {};
     const curStatus    = r.status    || 'Aktif';
     const curFollowers = r.followers != null ? r.followers : '';
     const curNote      = r.note      || '';
+    const curSalesUnit  = r.salesUnit  != null ? r.salesUnit  : '';
+    const curSalesOmzet = r.salesOmzet != null ? r.salesOmzet : '';
     const lastUpd      = r.tanggal   ? `<span style="font-size:10px;color:var(--muted);">Update: ${r.tanggal}</span>` : `<span style="font-size:10px;color:var(--muted);">Belum ada data</span>`;
     const tagClass     = r.status ? statusTagClass(r.status) : 'blue';
     const safeId       = acc.nama.replace(/[^a-zA-Z0-9]/g,'_');
@@ -1122,6 +1258,67 @@ function renderHealth(){
         </div>`;
     }
 
+    // Views growth & Engagement Rate badge (berdasarkan konten yang diposting via akun ini)
+    const cstats = accountContentStats(acc.nama);
+    let viewsErBadge = '';
+    if(cstats){
+      let viewsLine;
+      if(cstats.viewsPct !== null){
+        const vpct = parseFloat(cstats.viewsPct);
+        const vIsPos = vpct >= 0;
+        const vColor = vIsPos ? 'var(--cyan)' : 'var(--red)';
+        const vArrow = vIsPos ? '▲' : '▼';
+        viewsLine = `<span style="color:${vColor};font-weight:700;">${vArrow} ${Math.abs(vpct)}%</span> <span style="color:var(--muted);font-size:11px;">(${numFmt(cstats.prevViews)} → ${numFmt(cstats.curViews)})</span>`;
+      } else {
+        viewsLine = `<span style="font-size:11px;color:var(--muted);">Belum ada data 30 hari sebelumnya untuk dibandingkan</span>`;
+      }
+      viewsErBadge = `
+        <div style="background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:6px;" title="Berdasarkan konten yang diposting lewat akun ini, 30 hari terakhir">
+          <div>
+            <div style="font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;margin-bottom:2px;">Pertumbuhan Views (30 hari)</div>
+            <div style="font-size:13px;">${viewsLine}</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;">Avg. Engagement Rate</div>
+              <div style="font-size:16px;font-weight:700;color:var(--purple);">${cstats.curER.toFixed(2)}%</div>
+            </div>
+            <div style="font-size:10px;color:var(--muted);">${cstats.contentCount} konten</div>
+          </div>
+        </div>`;
+    } else {
+      viewsErBadge = `
+        <div style="background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;margin-bottom:2px;">Pertumbuhan Views &amp; ER</div>
+          <div style="font-size:12px;color:var(--muted);">Belum ada konten yang diposting via akun ini</div>
+        </div>`;
+    }
+
+    // Total penjualan organik (akumulasi semua entry yang pernah diinput utk akun ini)
+    const accLog = AKUN_LOG.filter(r2=>r2.nama===acc.nama);
+    const totalSalesUnit  = accLog.reduce((s,r2)=>s+(r2.salesUnit ||0),0);
+    const totalSalesOmzet = accLog.reduce((s,r2)=>s+(r2.salesOmzet||0),0);
+    let salesBadge = '';
+    if(totalSalesUnit>0 || totalSalesOmzet>0){
+      salesBadge = `
+        <div style="background:rgba(63,216,140,.10);border:1px solid var(--pink);border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px;" title="Akumulasi seluruh entry penjualan organik akun ini">
+          <div>
+            <div style="font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;">Total Penjualan Organik</div>
+            <div style="font-size:16px;font-weight:700;color:var(--pink);">${numFmt(totalSalesUnit)} unit</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:9px;color:var(--muted);margin-bottom:2px;">Omzet</div>
+            <div style="font-size:13px;font-weight:700;color:var(--pink);">Rp ${numFmt(totalSalesOmzet)}</div>
+          </div>
+        </div>`;
+    } else {
+      salesBadge = `
+        <div style="background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;margin-bottom:2px;">Total Penjualan Organik</div>
+          <div style="font-size:12px;color:var(--muted);">Belum ada data penjualan tercatat</div>
+        </div>`;
+    }
+
     return `<div class="card" style="display:flex;flex-direction:column;gap:12px;">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
         <div>
@@ -1133,12 +1330,12 @@ function renderHealth(){
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
         <div class="field" style="margin:0;">
           <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);">Followers</label>
-          <input type="number" id="akun_followers_${safeId}" data-orig="${curFollowers}" value="${curFollowers}" placeholder="0" min="0"
+          <input type="number" id="akun_followers_${safeId}" value="${curFollowers}" placeholder="0" min="0"
             style="background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:7px;padding:6px 10px;font-size:13px;width:100%;">
         </div>
         <div class="field" style="margin:0;">
           <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);">Status</label>
-          <select id="akun_status_${safeId}" data-orig="${curStatus}"
+          <select id="akun_status_${safeId}"
             style="background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:7px;padding:6px 10px;font-size:13px;width:100%;">
             <option value="Aktif" ${curStatus==='Aktif'?'selected':''}>Aktif</option>
             <option value="Warning" ${curStatus==='Warning'?'selected':''}>Warning</option>
@@ -1147,26 +1344,32 @@ function renderHealth(){
           </select>
         </div>
       </div>
+      <div style="display:grid;grid-template-columns:0.8fr 1.2fr;gap:8px;">
+        <div class="field" style="margin:0;">
+          <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:nowrap;">Penjualan (Unit)</label>
+          <input type="number" id="akun_salesunit_${safeId}" value="${curSalesUnit}" placeholder="0" min="0"
+            style="background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:7px;padding:6px 10px;font-size:13px;width:100%;">
+        </div>
+        <div class="field" style="margin:0;">
+          <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:nowrap;">Penjualan (Omzet Rp)</label>
+          <input type="number" id="akun_salesomzet_${safeId}" value="${curSalesOmzet}" placeholder="0" min="0"
+            style="background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:7px;padding:6px 10px;font-size:13px;width:100%;">
+        </div>
+      </div>
+      ${salesBadge}
       ${growthBadge}
+      ${viewsErBadge}
       <div class="field" style="margin:0;">
         <label style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);">Catatan (opsional)</label>
-        <input type="text" id="akun_note_${safeId}" data-orig="${escapeHtml(curNote)}" value="${escapeHtml(curNote)}" placeholder="Catatan tambahan..."
+        <input type="text" id="akun_note_${safeId}" value="${escapeHtml(curNote)}" placeholder="Catatan tambahan..."
           style="background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:7px;padding:6px 10px;font-size:13px;width:100%;">
       </div>
       <div style="display:flex;align-items:center;gap:10px;">
-        <button class="btn primary" id="akun_btn_${safeId}" style="padding:6px 16px;font-size:12px;" onclick="updateAkunInline('${acc.nama.replace(/'/g,"\\'")}')">💾 Update</button>
+        <button class="btn primary" style="padding:6px 16px;font-size:12px;" onclick="updateAkunInline('${acc.nama.replace(/'/g,"\\'")}')">💾 Update</button>
         <span id="akun_msg_${safeId}" style="font-size:11px;"></span>
       </div>
     </div>`;
   }).join('');
-
-  // Kembalikan nilai yang belum disimpan (dirty) ke kartu yang baru di-render
-  Object.keys(dirty).forEach(safeIdKey=>{
-    Object.keys(dirty[safeIdKey]).forEach(field=>{
-      const el = document.getElementById('akun_'+field+'_'+safeIdKey);
-      if(el) el.value = dirty[safeIdKey][field];
-    });
-  });
 }
 
 /* ============== MASTER RENDER ============== */
@@ -1175,6 +1378,7 @@ function render(){
   renderSummary(range);
   renderVideoTable(range, true);
   renderHealth();
+  renderRequests();
 }
 
 /* ============== PAGE TABS ============== */
@@ -1200,16 +1404,34 @@ document.getElementById('btnThemeLight').addEventListener('click', ()=>applyThem
 
 /* ============== APPS SCRIPT INTEGRATION ============== */
 const APPS_SCRIPT_CODE = `// ============================================================
-// APPS SCRIPT — DASHBOARD CREATIVE TEAM  v3
+// APPS SCRIPT — DASHBOARD CREATIVE TEAM  v4
 // Paste di Google Apps Script -> Deploy -> New Deployment
 //   Type        : Web App
 //   Execute as  : Me
 //   Who has access: Anyone
 // PENTING: Setiap kali kode diubah, klik "New Deployment" (bukan edit).
+// CATATAN v4: action=test & action=read DIJAMIN read-only, terpisah
+// total dari handleWrite(). Tidak ada appendRow/setValues di jalur ini.
 // ============================================================
 
 function doGet(e) {
   var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : 'read';
+
+  // TEST KONEKSI — read-only murni, tidak pernah memanggil handleWrite()
+  if (action === 'test') {
+    try {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var names = ['Produksi', 'Akun', 'Kreator', 'Produk', 'Akun_List', 'RequestKonten'];
+      var info = {};
+      names.forEach(function(n){
+        var sh = ss.getSheetByName(n);
+        info[n] = sh ? sh.getLastRow() : -1; // -1 = sheet belum ada
+      });
+      return jsonOutput({status:'ok', mode:'test', rowCounts: info});
+    } catch(err) {
+      return jsonOutput({status:'error', message: err.toString()});
+    }
+  }
 
   // WRITE via GET — menghindari masalah CORS pada POST
   if (action === 'write') {
@@ -1222,19 +1444,21 @@ function doGet(e) {
     }
   }
 
-  // READ
+  // READ — juga read-only, hanya mengambil isi sheet, tidak pernah menulis
   var ss          = SpreadsheetApp.getActiveSpreadsheet();
   var videoSheet  = ss.getSheetByName('Produksi');
   var akunSheet   = ss.getSheetByName('Akun');
   var kreatorSheet= ss.getSheetByName('Kreator');
   var produkSheet = ss.getSheetByName('Produk');
   var akunListSh  = ss.getSheetByName('Akun_List');
+  var reqSheet    = ss.getSheetByName('RequestKonten');
   return jsonOutput({
     videos     : sheetToObjects(videoSheet),
     akun       : sheetToObjects(akunSheet),
     kreator    : sheetToObjects(kreatorSheet),
     produk     : sheetToObjects(produkSheet),
-    akun_list  : sheetToObjects(akunListSh)
+    akun_list  : sheetToObjects(akunListSh),
+    requests   : sheetToObjects(reqSheet)
   });
 }
 
@@ -1293,28 +1517,14 @@ function handleWrite(data) {
     if (!sh) return { status: 'error', message: 'Sheet Akun tidak ditemukan' };
     // Pastikan header ada
     if (sh.getLastRow() === 0) {
-      sh.appendRow(['tanggal', 'nama', 'platform', 'status', 'followers', 'note']);
+      sh.appendRow(['tanggal', 'nama', 'platform', 'status', 'followers', 'note', 'salesUnit', 'salesOmzet']);
     }
     // Mode APPEND — setiap update = baris baru (untuk history & perbandingan)
     sh.appendRow([
       data.tanggal, data.nama, data.platform,
-      data.status, data.followers || 0, data.note || ''
+      data.status, data.followers || 0, data.note || '',
+      data.salesUnit || 0, data.salesOmzet || 0
     ]);
-
-  } else if (data.sheetType === 'akun_delete') {
-    // Hapus SEMUA baris riwayat akun ini dari sheet "Akun" berdasarkan nama (kolom B)
-    var sh = ss.getSheetByName('Akun');
-    if (!sh) return { status: 'error', message: 'Sheet Akun tidak ditemukan' };
-    var lastRow = sh.getLastRow();
-    if (lastRow > 1) {
-      var rows = sh.getRange(2, 1, lastRow - 1, 6).getValues();
-      // Hapus dari bawah ke atas supaya index baris tidak bergeser saat deleteRow
-      for (var i = rows.length - 1; i >= 0; i--) {
-        if (String(rows[i][1]).trim() === String(data.nama).trim()) {
-          sh.deleteRow(i + 2); // +2 karena offset header & index mulai dari 0
-        }
-      }
-    }
 
   } else if (data.sheetType === 'kreator_list') {
     var sh = ss.getSheetByName('Kreator');
@@ -1343,9 +1553,51 @@ function handleWrite(data) {
     if (lastRow > 1) sh.getRange(2, 1, lastRow - 1, 2).clearContent();
     var items = data.list || [];
     if (items.length > 0) sh.getRange(2, 1, items.length, 2).setValues(items.map(function(a){ return [a.nama, a.platform]; }));
+
+  } else if (data.sheetType === 'request') {
+    var sh = ss.getSheetByName('RequestKonten');
+    if (!sh) { sh = ss.insertSheet('RequestKonten'); sh.appendRow(['tanggal','judul','requester','pic','produk','platform','deadline','prioritas','status','brief']); }
+    else if (sh.getLastRow() === 0) sh.appendRow(['tanggal','judul','requester','pic','produk','platform','deadline','prioritas','status','brief']);
+    sh.appendRow([
+      forceText(data.tanggal), data.judul, data.requester || '', data.pic || '',
+      data.produk || '', data.platform || '', forceText(data.deadline),
+      data.prioritas || '', data.status || 'Baru', data.brief || ''
+    ]);
+
+  } else if (data.sheetType === 'request_update') {
+    var sh = ss.getSheetByName('RequestKonten');
+    if (!sh) return { status: 'error', message: 'Sheet RequestKonten tidak ditemukan' };
+    var lastRow = sh.getLastRow();
+    var found = false;
+    var rows = lastRow > 0 ? sh.getRange(1, 1, lastRow, 10).getValues() : [];
+    for (var i = 1; i < rows.length; i++) {
+      if (String(rows[i][1]).trim() === String(data.judul).trim()) {
+        sh.getRange(i + 1, 1, 1, 10).setValues([[
+          forceText(data.tanggal), data.judul, data.requester || '', data.pic || '',
+          data.produk || '', data.platform || '', forceText(data.deadline),
+          data.prioritas || '', data.status || 'Baru', data.brief || ''
+        ]]);
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      sh.appendRow([
+        forceText(data.tanggal), data.judul, data.requester || '', data.pic || '',
+        data.produk || '', data.platform || '', forceText(data.deadline),
+        data.prioritas || '', data.status || 'Baru', data.brief || ''
+      ]);
+    }
   }
 
   return { status: 'ok' };
+}
+
+function forceText(v) {
+  // Mencegah Google Sheets otomatis mengubah string tanggal jadi tipe Date
+  // (yang menyebabkan format aneh seperti 2026-06-30T17:00:00.000Z saat dibaca ulang)
+  if (!v) return '';
+  return "'" + v;
 }
 
 function sheetToObjects(sheet) {
@@ -1370,11 +1622,16 @@ function jsonOutput(obj) {
 // ============================================================
 // STRUKTUR SHEET:
 // "Produksi" : tanggal | judul | nama | tipe | produk | platform | views | likes | comments | shares | lastUpdated | akunPosting
-// "Akun"     : tanggal | nama  | platform | status | followers | note
+// "Akun"     : tanggal | nama  | platform | status | followers | note | salesUnit | salesOmzet
 // "Kreator"  : nama
 // "Produk"   : nama
 // "Akun_List": nama | platform
-// (Sheet Kreator, Produk, Akun_List dibuat otomatis jika belum ada)
+// "RequestKonten": tanggal | judul | requester | pic | produk | platform | deadline | prioritas | status | brief
+// (Sheet Kreator, Produk, Akun_List, RequestKonten dibuat otomatis jika belum ada)
+//
+// action=test  -> read-only, hanya hitung jumlah baris per sheet (untuk tombol Test Koneksi)
+// action=read  -> read-only, ambil semua isi sheet (untuk Tarik Data)
+// action=write -> satu-satunya jalur yang menulis, lewat handleWrite()
 // ============================================================`;
 
 function getAppsScriptUrl(){ return document.getElementById('appsScriptUrl').value.trim(); }
@@ -1403,57 +1660,56 @@ async function pullFromSheet(silent){
     let countVideo=0, countAkun=0;
     VIDEOS = [];
     AKUN_LOG = [];
-    const OLD_ACCOUNTS = ACCOUNTS; // simpan sementara untuk fallback legacy di bawah
-    ACCOUNTS = []; // reset total: daftar akun harus mengikuti server (Akun_List), bukan menumpuk terus secara lokal
     (json.videos||[]).forEach(r=>{
       const d = parseDate(r.tanggal);
       if(!d || !r.judul) return;
-      if(String(r.nama||'').startsWith('__test') || String(r.judul||'').startsWith('__test')) return; // skip data dummy dari Test Koneksi
       VIDEOS.push({ tanggal: fmtISO(d), judul: r.judul, nama: r.nama, tipe: r.tipe||'Video', produk: r.produk||'', platform: r.platform,
         views: parseFloat(r.views)||0, likes: parseFloat(r.likes)||0, comments: parseFloat(r.comments)||0, shares: parseFloat(r.shares)||0, lastUpdated: r.lastupdated||'', akunPosting: r.akunposting||'' });
-      if(r.nama && !DELETED_TEAM.includes(r.nama) && !TEAM.includes(r.nama)) TEAM.push(r.nama);
+      if(r.nama && !TEAM.includes(r.nama)) TEAM.push(r.nama);
       countVideo++;
     });
+    // Ambil semua baris akun untuk history lengkap
     (json.akun||[]).forEach(r=>{
       const d = parseDate(r.tanggal);
       if(!d || !r.nama) return;
-      if(String(r.nama||'').startsWith('__test')) return; // skip data dummy dari Test Koneksi
       AKUN_LOG.push({ tanggal: fmtISO(d), nama: r.nama, platform: r.platform, status: r.status||'Aktif',
-        followers: parseFloat(r.followers)||0, note: r.note||'' });
+        followers: parseFloat(r.followers)||0, note: r.note||'',
+        salesUnit: parseFloat(r.salesunit)||0, salesOmzet: parseFloat(r.salesomzet)||0 });
+      if(!ACCOUNTS.find(a=>a.nama===r.nama)) ACCOUNTS.push({nama:r.nama, platform:r.platform||'TikTok'});
       countAkun++;
     });
+    // Sort AKUN_LOG by tanggal ascending agar entry terbaru selalu di paling akhir
+    AKUN_LOG.sort((a,b)=> new Date(a.tanggal) - new Date(b.tanggal));
     // Sync kreator dari sheet
     if((json.kreator||[]).length > 0){
-      (json.kreator||[]).forEach(r=>{ if(r.nama && !DELETED_TEAM.includes(r.nama) && !TEAM.includes(r.nama)) TEAM.push(r.nama); });
+      (json.kreator||[]).forEach(r=>{ if(r.nama && !TEAM.includes(r.nama)) TEAM.push(r.nama); });
     }
     // Sync produk dari sheet
     if((json.produk||[]).length > 0){
       (json.produk||[]).forEach(r=>{ if(r.nama && !PRODUCTS.includes(r.nama)) PRODUCTS.push(r.nama); });
     }
-    // Akun_List adalah SUMBER KEBENARAN untuk daftar akun aktif.
-    // Akun yang sudah dihapus dari Akun_List tidak akan muncul lagi, walau masih ada riwayat lama di sheet "Akun".
+    // Sync akun_list dari sheet (override lokal agar semua device sama)
     if((json.akun_list||[]).length > 0){
       json.akun_list.forEach(r=>{
-        if(r.nama && !String(r.nama).startsWith('__test') && !DELETED_ACCOUNTS.includes(r.nama) && !ACCOUNTS.find(a=>a.nama===r.nama)) ACCOUNTS.push({nama:r.nama, platform:r.platform||'TikTok'});
+        if(r.nama && !ACCOUNTS.find(a=>a.nama===r.nama)) ACCOUNTS.push({nama:r.nama, platform:r.platform||'TikTok'});
       });
-      // Jaga-jaga: kalau ada akun yang baru saja ditambahkan lokal tapi belum sempat ke-push ke server
-      // (race kecil saat auto-sync), tetap pertahankan supaya tidak hilang seketika.
-      // Tapi jangan kembalikan akun yang sudah eksplisit dihapus user.
-      OLD_ACCOUNTS.forEach(a=>{ if(!ACCOUNTS.find(x=>x.nama===a.nama) && !DELETED_ACCOUNTS.includes(a.nama)) ACCOUNTS.push(a); });
-    } else {
-      // Fallback HANYA jika Akun_List masih benar-benar kosong (belum pernah disinkron sebelumnya):
-      // ambil dari riwayat sheet "Akun" supaya akun lama tidak hilang total saat pertama kali migrasi.
-      (json.akun||[]).forEach(r=>{
-        if(r.nama && !String(r.nama).startsWith('__test') && !DELETED_ACCOUNTS.includes(r.nama) && !ACCOUNTS.find(a=>a.nama===r.nama)) ACCOUNTS.push({nama:r.nama, platform:r.platform||'TikTok'});
+    }
+    // Sync request konten dari sheet
+    let countReq = 0;
+    if((json.requests||[]).length > 0){
+      REQUESTS = [];
+      json.requests.forEach(r=>{
+        if(!r.judul) return;
+        REQUESTS.push({ tanggal: r.tanggal||fmtISO(new Date()), judul: r.judul, requester: r.requester||'', pic: r.pic||'',
+          produk: r.produk||'', platform: r.platform||'', deadline: r.deadline||'', prioritas: r.prioritas||'Normal',
+          status: r.status||'Baru', brief: r.brief||'' });
+        countReq++;
       });
-      // Juga pertahankan akun yang baru ditambahkan lokal tapi belum pernah berhasil ke-push ke Akun_List,
-      // kecuali akun yang memang sudah dihapus user.
-      OLD_ACCOUNTS.forEach(a=>{ if(!ACCOUNTS.find(x=>x.nama===a.nama) && !DELETED_ACCOUNTS.includes(a.nama)) ACCOUNTS.push(a); });
     }
     saveLocalState();
-    refreshSelectors(); refreshSummaryFilters(); renderTeamList(); renderAccList(); renderProductList(); refreshPerfSelect(); refreshPerfAkunSelect();
+    refreshSelectors(); refreshSummaryFilters(); renderTeamList(); renderAccList(); renderProductList(); refreshPerfSelect(); refreshPerfAkunSelect(); renderRequests();
     render();
-    msg.textContent = '✅ Berhasil menarik '+countVideo+' baris video & '+countAkun+' baris log akun dari spreadsheet.';
+    msg.textContent = '✅ Berhasil menarik '+countVideo+' baris video, '+countAkun+' baris log akun & '+countReq+' request konten dari spreadsheet.';
     msg.style.color = 'var(--cyan)';
     updateSyncBadge();
   }catch(err){
@@ -1481,6 +1737,7 @@ async function pushAllToSheet(){
   let sent=0;
   for(const v of VIDEOS){ await pushOneToSheet({sheetType:'video_update', ...v}); sent++; }
   for(const r of AKUN_LOG){ await pushOneToSheet({sheetType:'akun_update', ...r}); sent++; }
+  for(const r of REQUESTS){ await pushOneToSheet({sheetType:'request_update', ...r}); sent++; }
   msg.textContent = 'Selesai mengirim '+sent+' baris data ke spreadsheet.'; msg.style.color='var(--cyan)';
 }
 document.getElementById('btnPullSheet').onclick = ()=>pullFromSheet(false);
@@ -1518,45 +1775,34 @@ document.getElementById('btnTestConn').onclick = async ()=>{
   if(!url){ msg.textContent='❌ URL belum diisi.'; msg.style.color='var(--red)'; return; }
   msg.textContent = '🔄 Menguji koneksi...'; msg.style.color='var(--muted)';
   try{
-    // Test 1: bisa fetch?
-    const res = await fetch(url+'?action=read', {cache:'no-store'});
+    // action=test: jalur read-only khusus di Apps Script, terpisah dari handleWrite()
+    const res = await fetch(url+'?action=test', {cache:'no-store'});
     const text = await res.text();
     let json;
     try{ json = JSON.parse(text); }catch(e){
-      msg.textContent = '❌ URL merespons tapi bukan JSON. Pastikan Apps Script sudah di-deploy ulang (New Deployment) dengan kode v3 terbaru.';
+      msg.textContent = '❌ URL merespons tapi bukan JSON. Pastikan Apps Script sudah di-deploy ulang (New Deployment) dengan kode v4 terbaru.';
       msg.style.color='var(--red)'; return;
     }
-    const nVideo = (json.videos||[]).length;
-    const nAkun  = (json.akun||[]).length;
-    msg.style.color='var(--cyan)';
 
-    // Test 2: coba kirim 1 data dummy
-    // Test write video
-    const testPayload = {sheetType:'video_update', judul:'__test__', tanggal:'2099-01-01', nama:'test', tipe:'test', produk:'', platform:'test', views:0, likes:0, comments:0, shares:0, lastUpdated:'', akunPosting:''};
-    const encoded = encodeURIComponent(JSON.stringify(testPayload));
-    const writeRes = await fetch(url+'?action=write&data='+encoded, {cache:'no-store'});
-    const writeText = await writeRes.text();
-    let writeJson;
-    try{ writeJson = JSON.parse(writeText); }catch(e){ writeJson = {status:'parse-error', raw: writeText.slice(0,100)}; }
+    if(json.status==='error'){
+      msg.textContent = '❌ Apps Script error: '+(json.message||'tidak diketahui')+'. Kemungkinan kode yang ter-deploy masih versi lama — deploy ulang dengan kode v4 terbaru.';
+      msg.style.color='var(--red)'; return;
+    }
 
-    // Test write akun
-    const testAkun = {sheetType:'akun_update', nama:'__test_akun__', tanggal:'2099-01-01', platform:'test', status:'Aktif', followers:0, note:''};
-    const encodedAkun = encodeURIComponent(JSON.stringify(testAkun));
-    const akunRes = await fetch(url+'?action=write&data='+encodedAkun, {cache:'no-store'});
-    const akunText = await akunRes.text();
-    let akunJson;
-    try{ akunJson = JSON.parse(akunText); }catch(e){ akunJson = {status:'parse-error'}; }
-
-    const videoOK = writeJson.status === 'ok';
-    const akunOK  = akunJson.status  === 'ok';
-
-    if(videoOK && akunOK){
-      msg.textContent = '✅ Koneksi OK! Read & Write Produksi ✓ | Read & Write Akun ✓ ('+nVideo+' video, '+nAkun+' akun)';
+    // Jika Apps Script yang ter-deploy masih versi lama (belum punya action=test),
+    // doGet lama akan jatuh ke jalur READ biasa dan baliknya {videos, akun, ...} bukan {rowCounts}.
+    if(json.rowCounts){
+      const rc = json.rowCounts;
+      const ringkas = Object.keys(rc).map(k=> k+': '+(rc[k]===-1?'sheet belum ada':(rc[k]-1)+' baris data')).join(' | ');
+      msg.style.color='var(--cyan)';
+      msg.textContent = '✅ Koneksi OK (read-only, tidak ada data ditambahkan). '+ringkas;
+    } else if(json.videos!==undefined || json.akun!==undefined){
+      const nVideo = (json.videos||[]).length;
+      const nAkun  = (json.akun||[]).length;
+      msg.style.color='orange';
+      msg.textContent = '⚠️ Koneksi OK tapi Apps Script Anda masih versi LAMA (belum ada action=test). Data terbaca: '+nVideo+' video, '+nAkun+' baris akun. Disarankan deploy ulang dengan kode v4 agar Test Koneksi terjamin read-only.';
     } else {
-      let detail = '';
-      if(!videoOK) detail += ' | Produksi write: '+JSON.stringify(writeJson);
-      if(!akunOK)  detail += ' | Akun write: '+JSON.stringify(akunJson);
-      msg.textContent = '⚠️ Sebagian gagal'+detail+'. Deploy ulang Apps Script dengan kode terbaru.';
+      msg.textContent = '⚠️ Respons tidak dikenali. Deploy ulang Apps Script dengan kode v4 terbaru.';
       msg.style.color='orange';
     }
   }catch(err){
@@ -1597,6 +1843,7 @@ document.getElementById('appsScriptUrl').addEventListener('change', ()=>{ saveLo
   renderTeamList();
   renderProductList();
   renderAccList();
+  renderRequests();
   refreshPerfSelect();
   refreshPerfAkunSelect();
   renderPeriodBtns();
